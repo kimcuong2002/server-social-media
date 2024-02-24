@@ -13,12 +13,12 @@ type CollectionDto {
 }
 
 input CreateCollectionDto {
-  createdAt: DateTime! = "2024-02-24T02:12:15.040Z"
+  createdAt: DateTime! = "2024-02-24T03:55:16.242Z"
   markets: [String!]! = []
   name: String!
   posts: [String!]! = []
   saved: String!
-  updatedAt: DateTime! = "2024-02-24T02:12:15.040Z"
+  updatedAt: DateTime! = "2024-02-24T03:55:16.242Z"
 }
 
 input CreateGroupDto {
@@ -27,61 +27,68 @@ input CreateGroupDto {
   author: String! = ""
   avatar: String!
   coverImage: String!
-  createdAt: DateTime! = "2024-02-24T02:12:15.031Z"
+  createdAt: DateTime! = "2024-02-24T03:55:16.225Z"
   description: String! = ""
   isPrivate: Boolean! = false
   members: [String!]! = []
   membersReq: [String!]! = []
   name: String!
-  updatedAt: DateTime! = "2024-02-24T02:12:15.031Z"
+  updatedAt: DateTime! = "2024-02-24T03:55:16.225Z"
 }
 
 input CreateMessageDto {
   author: String!
   content: String!
-  createdAt: DateTime! = "2024-02-24T02:12:15.044Z"
+  createdAt: DateTime! = "2024-02-24T03:55:16.249Z"
   room: String!
   typeMessage: String! = "string"
-  updatedAt: DateTime! = "2024-02-24T02:12:15.044Z"
+  updatedAt: DateTime! = "2024-02-24T03:55:16.249Z"
 }
 
 input CreatePostDto {
   authorsPostShared: [String!]! = []
   content: String!
-  createdAt: DateTime! = "2024-02-24T02:12:15.025Z"
+  createdAt: DateTime! = "2024-02-24T03:55:16.215Z"
   idGroup: String! = ""
   images: [String!]! = []
   isGhim: Boolean! = false
   statusPostToGroup: Boolean! = false
   topic: String!
-  updatedAt: DateTime! = "2024-02-24T02:12:15.025Z"
+  updatedAt: DateTime! = "2024-02-24T03:55:16.215Z"
   usersLiked: [String!]! = []
   verified: Boolean! = false
   video: [String!]! = []
 }
 
+input CreateRoomDto {
+  createdAt: DateTime! = "2024-02-24T03:55:16.313Z"
+  members: [String!]!
+  name: String!
+  updatedAt: DateTime! = "2024-02-24T03:55:16.313Z"
+}
+
 input CreateSavedDto {
   author: String!
-  createdAt: DateTime! = "2024-02-24T02:12:15.036Z"
+  createdAt: DateTime! = "2024-02-24T03:55:16.234Z"
   markets: [String!]! = []
   posts: [String!]! = []
-  updatedAt: DateTime! = "2024-02-24T02:12:15.036Z"
+  updatedAt: DateTime! = "2024-02-24T03:55:16.234Z"
 }
 
 input CreateTopicDto {
   color: String!
-  createdAt: DateTime! = "2024-02-24T02:12:15.019Z"
+  createdAt: DateTime! = "2024-02-24T03:55:16.206Z"
   image: String!
   name: String!
   rank: Float! = 0
-  updatedAt: DateTime! = "2024-02-24T02:12:15.019Z"
+  updatedAt: DateTime! = "2024-02-24T03:55:16.206Z"
 }
 
 input CreateUserDto {
   address: String! = ""
   avatar: String! = ""
   company: String! = ""
-  createdAt: DateTime! = "2024-02-24T02:12:14.688Z"
+  createdAt: DateTime! = "2024-02-24T03:55:15.808Z"
   dayOfBirth: String! = ""
   description: String! = ""
   email: String!
@@ -95,7 +102,7 @@ input CreateUserDto {
   relationship: Float! = 0
   role: String! = "user"
   university: String! = ""
-  updatedAt: DateTime! = "2024-02-24T02:12:14.688Z"
+  updatedAt: DateTime! = "2024-02-24T03:55:15.808Z"
   username: String!
 }
 
@@ -153,6 +160,7 @@ type Mutation {
   createGroup(body: CreateGroupDto!): Group!
   createMessage(body: CreateMessageDto!): Message!
   createPost(body: CreatePostDto!): Post!
+  createRoom(body: CreateRoomDto!): Room!
   createSaved(body: CreateSavedDto!): Saved!
   createTopic(body: CreateTopicDto!): Topic!
   delete(id: String!): ResponseDto!
@@ -164,6 +172,7 @@ type Mutation {
   deletePost(id: String!): ResponseDto!
   deletePostCollection(id: String!, idPost: String!): ResponseDto!
   deletePostSaved(idPost: String!, idSaved: String!): ResponseDto!
+  deleteRoom(id: String!): ResponseDto!
   deleteTopic(id: String!): ResponseDto!
   ghimPost(idPost: String!): ResponseDto!
   likePost(idPost: String!, idUser: String!): ResponseDto!
@@ -180,6 +189,7 @@ type Mutation {
   updatePost(body: UpdatePostDto!, id: String!): ResponseDto!
   updatePostCollection(id: String!, idPost: String!): ResponseDto!
   updatePostSaved(idPost: String!, idSaved: String!): ResponseDto!
+  updateRoom(body: UpdateRoomDto!, id: String!): ResponseDto!
   updateTopic(body: UpdateTopicDto!, id: String!): ResponseDto!
   uploadMultipleFiles(files: [Upload!]!): [ResponseSingleUpload!]!
   uploadSingleFiles(file: Upload!): ResponseSingleUpload!
@@ -231,12 +241,14 @@ type Post {
 type Query {
   getAllMessage(room: String!): [Message!]!
   getAllPost(filter: ParamsQueryDto!, limit: Float!, page: Float!): PaginationPostDto!
+  getAllRoom(idUser: String!): [Room!]!
   getCollections(idSaved: String!, limit: Float!, page: Float!): PaginationCollectionDto!
   getGroupById(id: String!): Group!
   getInfoUser: ResponseUserDto!
   getPostById(id: String!): Post!
   getPosts(filter: ParamsQueryDto!, limit: Float!, page: Float!): PaginationGroupDto!
   getPostsByGroup(idGroup: String!, limit: Float!, page: Float!): PaginationPostDto!
+  getRoomById(id: String!): Room!
   getSaved(idAuthor: String!): Saved!
   topic(name: String!): Topic!
   topics: [Topic!]!
@@ -280,6 +292,15 @@ type ResponseUserDto {
   username: String!
 }
 
+type Room {
+  author: User!
+  createdAt: DateTime!
+  id: ID!
+  members: [User!]!
+  name: String!
+  updatedAt: DateTime!
+}
+
 type Saved {
   author: User!
   createdAt: DateTime!
@@ -293,7 +314,7 @@ input SignUpUserDto {
   address: String! = ""
   avatar: String! = ""
   company: String! = ""
-  createdAt: DateTime! = "2024-02-24T02:12:14.688Z"
+  createdAt: DateTime! = "2024-02-24T03:55:15.808Z"
   dayOfBirth: String! = ""
   description: String! = ""
   email: String!
@@ -307,7 +328,7 @@ input SignUpUserDto {
   relationship: Float! = 0
   role: String! = "user"
   university: String! = ""
-  updatedAt: DateTime! = "2024-02-24T02:12:14.688Z"
+  updatedAt: DateTime! = "2024-02-24T03:55:15.808Z"
   username: String!
 }
 
@@ -331,42 +352,49 @@ input UpdateGroupDto {
   author: String = ""
   avatar: String
   coverImage: String
-  createdAt: DateTime = "2024-02-24T02:12:15.031Z"
+  createdAt: DateTime = "2024-02-24T03:55:16.225Z"
   description: String = ""
   isPrivate: Boolean = false
   members: [String!] = []
   membersReq: [String!] = []
   name: String
-  updatedAt: DateTime = "2024-02-24T02:12:15.031Z"
+  updatedAt: DateTime = "2024-02-24T03:55:16.225Z"
 }
 
 input UpdateMessageDto {
   content: String
-  updatedAt: DateTime = "2024-02-24T02:12:15.044Z"
+  updatedAt: DateTime = "2024-02-24T03:55:16.249Z"
 }
 
 input UpdatePostDto {
   authorsPostShared: [String!] = []
   content: String
-  createdAt: DateTime = "2024-02-24T02:12:15.025Z"
+  createdAt: DateTime = "2024-02-24T03:55:16.215Z"
   idGroup: String = ""
   images: [String!] = []
   isGhim: Boolean = false
   statusPostToGroup: Boolean = false
   topic: String
-  updatedAt: DateTime = "2024-02-24T02:12:15.025Z"
+  updatedAt: DateTime = "2024-02-24T03:55:16.215Z"
   usersLiked: [String!] = []
   verified: Boolean = false
   video: [String!] = []
 }
 
+input UpdateRoomDto {
+  createdAt: DateTime = "2024-02-24T03:55:16.313Z"
+  members: [String!]
+  name: String
+  updatedAt: DateTime = "2024-02-24T03:55:16.313Z"
+}
+
 input UpdateTopicDto {
   color: String
-  createdAt: DateTime = "2024-02-24T02:12:15.019Z"
+  createdAt: DateTime = "2024-02-24T03:55:16.206Z"
   image: String
   name: String
   rank: Float = 0
-  updatedAt: DateTime = "2024-02-24T02:12:15.019Z"
+  updatedAt: DateTime = "2024-02-24T03:55:16.206Z"
 }
 
 input UpdateUserDto {
@@ -385,7 +413,7 @@ input UpdateUserDto {
   relationship: Float = 0
   role: String = "user"
   university: String = ""
-  updatedAt: DateTime = "2024-02-24T02:12:14.688Z"
+  updatedAt: DateTime = "2024-02-24T03:55:15.808Z"
   username: String
 }
 

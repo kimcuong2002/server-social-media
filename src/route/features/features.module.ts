@@ -6,7 +6,6 @@ import { GroupModule } from './group/group.module';
 import { SavedModule } from './saved/saved.module';
 import { CollectionModule } from './collection/collection.module';
 import { MessageModule } from './message/message.module';
-import { RoomResolver } from './room/room.resolver';
 import { RoomModule } from './room/room.module';
 
 @Module({
@@ -20,6 +19,5 @@ import { RoomModule } from './room/room.module';
     MessageModule,
     RoomModule,
   ],
-  providers: [RoomResolver],
 })
 export class FeatureModule {}
