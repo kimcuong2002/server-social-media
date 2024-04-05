@@ -46,6 +46,9 @@ export class UserDto {
   avatar: string;
 
   @Field()
+  coverImage: string;
+
+  @Field()
   phone: string;
 
   @Field()

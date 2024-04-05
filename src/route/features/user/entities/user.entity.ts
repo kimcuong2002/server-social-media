@@ -49,6 +49,9 @@ export class User {
   avatar: string;
 
   @Column()
+  coverImage: string;
+
+  @Column()
   phone: string;
 
   @Column()

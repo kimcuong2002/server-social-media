@@ -64,6 +64,10 @@ export class CreateUserDto {
   @Field(() => String, { defaultValue: '' })
   avatar: string;
 
+  @IsOptional()
+  @Field(() => String, { defaultValue: '' })
+  coverImage: string;
+
   @IsNotEmpty()
   @MaxLength(11)
   @Field()
