@@ -1,7 +1,14 @@
-import { InputType, PartialType, PickType } from '@nestjs/graphql';
-import { CreateMessageDto } from './create-message.dto';
+import { Field, InputType } from '@nestjs/graphql';
+import { IsNotEmpty, IsOptional } from 'class-validator';
+import { EnumTypeMessage } from 'src/ts/enum';
 
 @InputType()
-export class UpdateMessageDto extends PartialType(
-  PickType(CreateMessageDto, ['content', 'updatedAt']),
-) {}
+export class UpdateMessageDto {
+  @IsNotEmpty()
+  @Field(() => String)
+  content: string;
+
+  @IsOptional()
+  @Field(() => Date, { defaultValue: new Date() })
+  updatedAt: Date;
+}

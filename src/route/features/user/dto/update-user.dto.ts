@@ -1,7 +1,81 @@
-import { InputType, OmitType, PartialType } from '@nestjs/graphql';
-import { CreateUserDto } from './create-user.dto';
+import { Field, InputType } from '@nestjs/graphql';
+import { IsEmail, IsOptional, MaxLength, MinLength } from 'class-validator';
+import { EnumRelationShip, EnumRole } from 'src/ts/enum';
 
 @InputType()
-export class UpdateUserDto extends PartialType(
-  OmitType(CreateUserDto, ['createdAt', 'password'] as const),
-) {}
+export class UpdateUserDto {
+  @IsOptional()
+  @Field(() => String, { nullable: true })
+  username: string;
+
+  @IsOptional()
+  @Field(() => String, { nullable: true })
+  role: EnumRole;
+
+  @IsOptional()
+  @Field(() => String, { nullable: true })
+  fullname: string;
+
+  @IsOptional()
+  @IsEmail()
+  @Field(() => String, { nullable: true })
+  email: string;
+
+  @IsOptional()
+  @Field(() => String, { nullable: true })
+  address: string;
+
+  @IsOptional()
+  @Field(() => String, { nullable: true })
+  company: string;
+
+  @IsOptional()
+  @Field(() => String, { nullable: true })
+  university: string;
+
+  @IsOptional()
+  @Field(() => Number, { nullable: true })
+  relationship: EnumRelationShip;
+
+  @IsOptional()
+  @Field(() => [String], { nullable: true })
+  files: string[];
+
+  @IsOptional()
+  @Field(() => Number, { nullable: true })
+  gender: number;
+
+  @IsOptional()
+  @Field(() => String, { nullable: true })
+  dayOfBirth: string;
+
+  @IsOptional()
+  @Field(() => String, { nullable: true })
+  avatar: string;
+
+  @IsOptional()
+  @Field(() => String, { nullable: true })
+  coverImage: string;
+
+  @IsOptional()
+  @MaxLength(11)
+  @MinLength(10)
+  @Field(() => String, { nullable: true })
+  phone: string;
+
+  @IsOptional()
+  @Field(() => String, { nullable: true })
+  description: string;
+
+  @IsOptional()
+  @Field(() => [String], { nullable: true })
+  friends: string[];
+
+  @IsOptional()
+  @Field(() => [String], { nullable: true })
+  friendsReq: string[];
+
+  @IsOptional()
+  @Field(() => Date, { defaultValue: new Date() })
+  updatedAt: Date;
+}

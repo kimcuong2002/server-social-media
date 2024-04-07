@@ -1,10 +1,11 @@
-import { Field, InputType } from '@nestjs/graphql';
-import { IsNotEmpty, IsOptional } from 'class-validator';
+import { Field, ID, InputType } from '@nestjs/graphql';
+import { IsNotEmpty, IsOptional, IsUUID } from 'class-validator';
 
 @InputType()
 export class CreatePostDto {
   @IsNotEmpty()
-  @Field()
+  @IsUUID('4', { each: true })
+  @Field(() => ID)
   topic: string;
 
   @IsNotEmpty()

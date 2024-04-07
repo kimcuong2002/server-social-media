@@ -68,7 +68,7 @@ export class GroupService {
       if (!group) {
         throw new NotFoundException('Group not found');
       }
-      group = { ...group, ...body, updatedAt: new Date() };
+      group = { ...group, ...body };
       await this.groupRepository.save(group);
 
       return {

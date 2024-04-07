@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Readable } from 'stream';
 import toStream = require('buffer-to-stream');
 import { v2 } from 'cloudinary';
@@ -19,6 +19,7 @@ export class UploadService {
       return this.cloudinary(buffer);
     } catch (error) {
       console.log(error);
+      throw new BadRequestException(error);
     }
   }
 
@@ -35,6 +36,7 @@ export class UploadService {
       return arrayResponse;
     } catch (error) {
       console.log(error);
+      throw new BadRequestException(error);
     }
   }
 

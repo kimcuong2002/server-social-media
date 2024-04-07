@@ -1,4 +1,11 @@
-import { Args, Resolver, Query, Mutation } from '@nestjs/graphql';
+import {
+  Args,
+  Resolver,
+  Query,
+  Mutation,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { CollectionDto } from './dto/collection.dto';
 import { CollectionService } from './collection.service';
 import { UseGuards } from '@nestjs/common';
@@ -10,10 +17,14 @@ import { EnumRole } from 'src/ts/enum';
 import { ResponseDto } from 'src/ts/common';
 import { CreateCollectionDto } from './dto/create-collection.dto';
 import { UpdateCollectionDto } from './dto/update-collection.dto';
+import { PostService } from '../post/post.service';
 
 @Resolver(() => CollectionDto)
 export class CollectionResolver {
-  constructor(private readonly collectionService: CollectionService) {}
+  constructor(
+    private readonly collectionService: CollectionService,
+    private readonly postService: PostService,
+  ) { }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(EnumRole.ADMIN)
@@ -81,5 +92,10 @@ export class CollectionResolver {
   @Mutation(() => ResponseDto)
   deleteCollection(@Args('id') id: string) {
     return this.collectionService.deleteCollection(id);
+  }
+
+  @ResolveField()
+  async posts(@Parent() collection: CollectionDto) {
+    return this.postService.getManyPostsById(collection.posts);
   }
 }

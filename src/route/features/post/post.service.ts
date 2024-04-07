@@ -80,13 +80,13 @@ export class PostService {
       await this.userService.updateAllFileForUser(idUser, body.images);
       return this.postRepository.save({
         id: uuid(),
+        ...rest,
         isPostToGroup: {
           idGroup,
           status: statusPostToGroup,
           verified: verified,
         },
         author: idUser,
-        ...rest,
       });
     } catch (error) {
       throw new BadRequestException(`Error creating post`);
@@ -103,7 +103,7 @@ export class PostService {
       if (!post) {
         throw new NotFoundException('Post not found');
       }
-      post = { ...post, ...body };
+      post = { ...post, ...body, updatedAt: new Date() };
       await this.postRepository.save(post);
 
       return {
