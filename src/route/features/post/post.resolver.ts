@@ -18,12 +18,14 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { Post } from './entities/post.entity';
 import { UserService } from '../user/user.service';
 import { getUserIdFromJwt } from 'src/helper/getIdUserFromJwt';
+import { TopicService } from '../topic/topic.service';
 
 @Resolver(() => PostDto)
 export class PostResolver {
   constructor(
     private readonly postService: PostService,
     private readonly userService: UserService,
+    private readonly topicService: TopicService,
   ) {}
 
   @UseGuards(JwtAuthGuard)
@@ -102,5 +104,10 @@ export class PostResolver {
   @ResolveField()
   authorsPostShared(@Parent() post: Post) {
     return this.userService.getManyUsersById(post.authorsPostShared);
+  }
+
+  @ResolveField()
+  topic(@Parent() post: Post) {
+    return this.topicService.getTopicById(post.topic);
   }
 }
