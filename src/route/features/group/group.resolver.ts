@@ -31,7 +31,7 @@ export class GroupResolver {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(EnumRole.ADMIN)
   @Query(() => PaginationGroupDto)
-  getPosts(
+  getGroups(
     @Args('filter') filter: ParamsQueryDto,
     @Args('page') page: number,
     @Args('limit') limit: number,
