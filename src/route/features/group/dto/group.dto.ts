@@ -34,7 +34,7 @@ export class GroupDto {
   membersReq: string[];
 
   @Field()
-  idPrivate: boolean;
+  isPrivate: boolean;
 
   @Field()
   createdAt: Date;
