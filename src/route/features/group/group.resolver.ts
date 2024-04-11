@@ -28,8 +28,7 @@ export class GroupResolver {
     private readonly userService: UserService,
   ) {}
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(EnumRole.ADMIN)
+  @UseGuards(JwtAuthGuard)
   @Query(() => PaginationGroupDto)
   getGroups(
     @Args('filter') filter: ParamsQueryDto,
