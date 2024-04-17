@@ -56,6 +56,23 @@ export class PostService {
     return new Pagination<Post>(result, count, page);
   }
 
+  async getPostByAuthor(
+    idAuthor: string,
+    page = 1,
+    limit = 10,
+  ): Promise<Pagination<Post>> {
+    const skip = (page - 1) * limit;
+    const [result, count] = await this.postRepository.findAndCount({
+      where: {
+        author: idAuthor,
+      },
+      skip,
+      take: limit,
+    });
+
+    return new Pagination<Post>(result, count, page);
+  }
+
   async getManyPostsById(postIds: string[]): Promise<Post[]> {
     return this.postRepository.find({
       where: {

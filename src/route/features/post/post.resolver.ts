@@ -48,6 +48,16 @@ export class PostResolver {
     return this.postService.getPostByGroup(idGroup, page, limit);
   }
 
+  @Query(() => PaginationPostDto)
+  @UseGuards(JwtAuthGuard)
+  getPostByAuthor(
+    @Args('idAuthor') idAuthor: string,
+    @Args('page') page: number,
+    @Args('limit') limit: number,
+  ) {
+    return this.postService.getPostByAuthor(idAuthor, page, limit);
+  }
+
   @Query(() => PostDto)
   @UseGuards(JwtAuthGuard)
   getPostById(@Args('id') id: string) {
