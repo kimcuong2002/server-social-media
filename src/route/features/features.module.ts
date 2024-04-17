@@ -7,6 +7,7 @@ import { SavedModule } from './saved/saved.module';
 import { CollectionModule } from './collection/collection.module';
 import { MessageModule } from './message/message.module';
 import { RoomModule } from './room/room.module';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { RoomModule } from './room/room.module';
     CollectionModule,
     MessageModule,
     RoomModule,
+    CommentModule,
   ],
 })
 export class FeatureModule {}
