@@ -160,4 +160,15 @@ export class UserService {
       throw new BadRequestException(`Error deleting user`);
     }
   }
+
+  async getQuantityUser(): Promise<{ quantity: number }> {
+    try {
+      const quantity = await this.userRepository.count();
+      return {
+        quantity: quantity,
+      };
+    } catch (err) {
+      throw new BadRequestException('Error get quantity user');
+    }
+  }
 }

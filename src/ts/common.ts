@@ -25,6 +25,12 @@ export class ResponseDto {
   message: string;
 }
 
+@ObjectType()
+export class ResponseQuantityDto {
+  @Field()
+  quantity: number;
+}
+
 @InputType()
 export class ParamsQueryDto {
   @Field({ nullable: true })

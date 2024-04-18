@@ -17,7 +17,11 @@ import { RolesGuard } from 'src/route/auth/guard/roles.guard';
 import { Roles } from 'src/route/auth/decorators/roles.decorator';
 import { EnumRole } from 'src/ts/enum';
 import { User } from './entities/user.entity';
-import { QueryPagination, ResponseDto } from 'src/ts/common';
+import {
+  QueryPagination,
+  ResponseDto,
+  ResponseQuantityDto,
+} from 'src/ts/common';
 import { ResponseUserDto } from './dto/response-user.dto';
 import { getUserIdFromJwt } from 'src/helper/getIdUserFromJwt';
 
@@ -69,6 +73,13 @@ export class UserResolver {
   @Mutation(() => ResponseDto)
   delete(@Args('id') id: string) {
     return this.userService.deleteUser(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Roles(EnumRole.ADMIN)
+  @Query(() => ResponseQuantityDto)
+  getQuantityUser() {
+    return this.userService.getQuantityUser();
   }
 
   @ResolveField()
