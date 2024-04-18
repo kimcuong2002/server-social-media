@@ -79,8 +79,9 @@ export class PostResolver {
 
   @UseGuards(JwtAuthGuard)
   @Mutation(() => ResponseDto)
-  ghimPost(@Args('idPost') idPost: string) {
-    return this.postService.ghimPost(idPost);
+  ghimPost(@Context() context, @Args('idPost') idPost: string) {
+    const idUser = getUserIdFromJwt(context);
+    return this.postService.ghimPost(idPost, idUser);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -97,8 +98,9 @@ export class PostResolver {
 
   @UseGuards(JwtAuthGuard)
   @Mutation(() => ResponseDto)
-  deletePost(@Args('id') id: string) {
-    return this.postService.deletePost(id);
+  deletePost(@Context() context, @Args('id') id: string) {
+    const idUser = getUserIdFromJwt(context);
+    return this.postService.deletePost(id, idUser);
   }
 
   @ResolveField()

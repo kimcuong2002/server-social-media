@@ -132,9 +132,14 @@ export class PostService {
     }
   }
 
-  async ghimPost(idPost: string): Promise<{ status: number; message: string }> {
+  async ghimPost(
+    idPost: string,
+    idUser: string,
+  ): Promise<{ status: number; message: string }> {
     try {
-      let post = await this.postRepository.findOne({ where: { id: idPost } });
+      let post = await this.postRepository.findOne({
+        where: { id: idPost, author: idUser },
+      });
       let postGhimed = await this.postRepository.findOne({
         where: { isGhim: true },
       });
@@ -248,9 +253,14 @@ export class PostService {
     }
   }
 
-  async deletePost(id: string): Promise<{ status: number; message: string }> {
+  async deletePost(
+    id: string,
+    idUser: string,
+  ): Promise<{ status: number; message: string }> {
     try {
-      const post = await this.postRepository.findOne({ where: { id } });
+      const post = await this.postRepository.findOne({
+        where: { id, author: idUser },
+      });
 
       if (!post) {
         throw new NotFoundException('Post not found');
