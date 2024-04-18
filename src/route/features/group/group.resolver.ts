@@ -97,7 +97,7 @@ export class GroupResolver {
 
   @ResolveField()
   author(@Parent() group: Group) {
-    return this.userService.getUserById(group.id);
+    return this.userService.getUserById(group.author);
   }
 
   @ResolveField()
