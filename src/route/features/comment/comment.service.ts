@@ -107,9 +107,22 @@ export class CommentService {
 
   async deleteComment(
     id: string,
+    idCmtParent?: string,
   ): Promise<{ status: number; message: string }> {
     try {
       const comment = await this.commentRepository.findOne({ where: { id } });
+      if (idCmtParent) {
+        const commentParent = await this.commentRepository.findOne({
+          where: { id: idCmtParent },
+        });
+        if (!commentParent) {
+          throw new NotFoundException('Comment parent not found');
+        }
+        commentParent.replies = commentParent.replies.filter(
+          (id) => id !== comment.id,
+        );
+        await this.commentRepository.save(commentParent);
+      }
       if (!comment) {
         throw new NotFoundException('Comment not found');
       }
