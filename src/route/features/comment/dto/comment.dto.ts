@@ -15,10 +15,10 @@ export class CommentDto {
   @Field(() => UserDto)
   author: string;
 
-  @Field()
+  @Field(() => [String])
   images: string[];
 
-  @Field()
+  @Field(() => [String])
   videos: string[];
 
   @Field(() => [UserDto])
