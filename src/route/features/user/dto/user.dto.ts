@@ -16,6 +16,12 @@ export class UserDto {
   role: EnumRole;
 
   @Field()
+  isActive: number;
+
+  @Field(() => [UserDto])
+  usersBlocked: string[];
+
+  @Field()
   fullname: string;
 
   @Field()

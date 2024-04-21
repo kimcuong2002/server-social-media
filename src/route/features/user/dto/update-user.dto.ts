@@ -13,6 +13,14 @@ export class UpdateUserDto {
   role: EnumRole;
 
   @IsOptional()
+  @Field(() => Number, { nullable: true })
+  isActive: number;
+
+  @IsOptional()
+  @Field(() => [String], { nullable: true })
+  usersBlocked: string[];
+
+  @IsOptional()
   @Field(() => String, { nullable: true })
   fullname: string;
 

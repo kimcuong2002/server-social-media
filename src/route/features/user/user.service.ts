@@ -9,7 +9,7 @@ import { v4 as uuid } from 'uuid';
 import { User } from './entities/user.entity';
 import { MongoRepository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
-import { EnumRole } from 'src/ts/enum';
+import { EnumActive, EnumRole } from 'src/ts/enum';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Pagination } from 'src/ts/common';
 
@@ -169,6 +169,94 @@ export class UserService {
       };
     } catch (err) {
       throw new BadRequestException('Error get quantity user');
+    }
+  }
+
+  async activeUser(id: string): Promise<{ status: number; message: string }> {
+    try {
+      const user = await this.userRepository.findOne({ where: { id } });
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+      user.isActive = EnumActive.ACTIVE;
+      await this.userRepository.save(user);
+      return {
+        status: HttpStatus.OK,
+        message: 'Actived user successfully',
+      };
+    } catch (error) {
+      throw new BadRequestException('Error active user');
+    }
+  }
+
+  async inActiveUser(id: string): Promise<{ status: number; message: string }> {
+    try {
+      const user = await this.userRepository.findOne({ where: { id } });
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+      user.isActive = EnumActive.INACTIVE;
+      await this.userRepository.save(user);
+      return {
+        status: HttpStatus.OK,
+        message: 'Inactived user successfully',
+      };
+    } catch (error) {
+      throw new BadRequestException('Error inactive user');
+    }
+  }
+
+  async blockUser(
+    id: string,
+    idUserBlocked: string,
+  ): Promise<{ status: number; message: string }> {
+    try {
+      const user = await this.userRepository.findOne({ where: { id } });
+      const userWantBlock = await this.userRepository.findOne({
+        where: { id: idUserBlocked },
+      });
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+      if (!userWantBlock) {
+        throw new NotFoundException('User want block not found');
+      }
+      user.usersBlocked = [userWantBlock.id, ...user.usersBlocked];
+      await this.userRepository.save(user);
+      return {
+        status: HttpStatus.OK,
+        message: 'Block user successfully',
+      };
+    } catch (error) {
+      throw new BadRequestException('Error block user');
+    }
+  }
+
+  async unBlockUser(
+    id: string,
+    idUserBlocked: string,
+  ): Promise<{ status: number; message: string }> {
+    try {
+      const user = await this.userRepository.findOne({ where: { id } });
+      const userWantUnBlock = await this.userRepository.findOne({
+        where: { id: idUserBlocked },
+      });
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+      if (!userWantUnBlock) {
+        throw new NotFoundException('User want unblock not found');
+      }
+      user.usersBlocked = user.usersBlocked.filter(
+        (id) => id !== userWantUnBlock.id,
+      );
+      await this.userRepository.save(user);
+      return {
+        status: HttpStatus.OK,
+        message: 'Unblock user successfully',
+      };
+    } catch (error) {
+      throw new BadRequestException('Error unblock user');
     }
   }
 }

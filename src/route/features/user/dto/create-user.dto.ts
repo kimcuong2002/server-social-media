@@ -6,7 +6,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { EnumRelationShip, EnumRole } from 'src/ts/enum';
+import { EnumActive, EnumRelationShip, EnumRole } from 'src/ts/enum';
 
 @InputType()
 export class CreateUserDto {
@@ -31,6 +31,14 @@ export class CreateUserDto {
   @IsEmail()
   @Field()
   email: string;
+
+  @IsOptional()
+  @Field(() => Number, { defaultValue: EnumActive.ACTIVE })
+  isActive: number;
+
+  @IsOptional()
+  @Field(() => [String], { defaultValue: [] })
+  usersBlocked: string[];
 
   @IsOptional()
   @Field(() => String, { defaultValue: '' })

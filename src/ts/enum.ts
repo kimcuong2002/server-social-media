@@ -14,3 +14,8 @@ export enum EnumRelationShip {
   DATING = 1,
   MARRIED = 2,
 }
+
+export enum EnumActive {
+  INACTIVE = 0,
+  ACTIVE = 1,
+}

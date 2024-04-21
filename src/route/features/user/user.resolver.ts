@@ -82,6 +82,37 @@ export class UserResolver {
     return this.userService.getQuantityUser();
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Roles(EnumRole.ADMIN)
+  @Mutation(() => ResponseDto)
+  activeUser(@Args('id') id: string) {
+    return this.userService.activeUser(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Roles(EnumRole.ADMIN)
+  @Mutation(() => ResponseDto)
+  inActiveUser(@Args('id') id: string) {
+    return this.userService.inActiveUser(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Mutation(() => ResponseDto)
+  blockUser(@Context() context, @Args('idUserBlocked') idUserBlocked: string) {
+    const idUser = getUserIdFromJwt(context);
+    return this.userService.blockUser(idUser, idUserBlocked);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Mutation(() => ResponseDto)
+  unBlockUser(
+    @Context() context,
+    @Args('idUserBlocked') idUserBlocked: string,
+  ) {
+    const idUser = getUserIdFromJwt(context);
+    return this.userService.unBlockUser(idUser, idUserBlocked);
+  }
+
   @ResolveField()
   async friends(@Parent() user: User) {
     return this.userService.getManyUsersById(user.friends);
@@ -90,5 +121,10 @@ export class UserResolver {
   @ResolveField()
   async friendsReq(@Parent() user: User) {
     return this.userService.getManyUsersById(user.friends);
+  }
+
+  @ResolveField()
+  async usersBlocked(@Parent() user: User) {
+    return this.userService.getManyUsersById(user.usersBlocked);
   }
 }

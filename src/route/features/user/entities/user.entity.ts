@@ -22,6 +22,12 @@ export class User {
   role: EnumRole;
 
   @Column()
+  isActive: number;
+
+  @Column()
+  usersBlocked: string[];
+
+  @Column()
   email: string;
 
   @Column()
