@@ -21,6 +21,9 @@ export class Post {
   images: string[];
 
   @Column()
+  quantityComments: number;
+
+  @Column()
   videos: string[];
 
   @Column()

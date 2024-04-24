@@ -37,6 +37,9 @@ export class PostDto {
   @Field()
   isGhim: boolean;
 
+  @Field()
+  quantityComments: number;
+
   @Field(() => [UserDto])
   usersLiked: string[];
 

@@ -132,6 +132,22 @@ export class PostService {
     }
   }
 
+  async updateQuanityComments(
+    id: string,
+    action: 'increment' | 'decrement',
+  ): Promise<Post> {
+    const post = await this.postRepository.findOne({ where: { id } });
+    if (!post) {
+      throw new NotFoundException('Post not found');
+    }
+    post.quantityComments =
+      action === 'increment'
+        ? post.quantityComments + 1
+        : post.quantityComments - 1;
+    await this.postRepository.save(post);
+    return post;
+  }
+
   async ghimPost(
     idPost: string,
     idUser: string,

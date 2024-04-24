@@ -24,6 +24,10 @@ export class UpdatePostDto {
   isGhim: boolean;
 
   @IsOptional()
+  @Field(() => Number, { nullable: true })
+  quantityComments: number;
+
+  @IsOptional()
   @Field(() => [String], { nullable: true })
   usersLiked: string[];
 

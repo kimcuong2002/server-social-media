@@ -25,6 +25,10 @@ export class CreatePostDto {
   isGhim: boolean;
 
   @IsOptional()
+  @Field(() => Number, { defaultValue: 0 })
+  quantityComments: number;
+
+  @IsOptional()
   @Field(() => [String], { defaultValue: [] })
   usersLiked: string[];
 

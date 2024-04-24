@@ -10,11 +10,13 @@ import { Pagination } from 'src/ts/common';
 import { Repository } from 'typeorm';
 import { Comment } from './entities/comment.entity';
 import { CreateCommentDto } from './dto/create-comment.dto';
+import { PostService } from '../post/post.service';
 
 @Injectable()
 export class CommentService {
   constructor(
     @InjectRepository(Comment) private commentRepository: Repository<Comment>,
+    private readonly postService: PostService,
   ) {}
 
   async getComments(
@@ -30,6 +32,10 @@ export class CommentService {
     });
 
     return new Pagination<Comment>(result, count, page);
+  }
+
+  async getQuantityCommentOfPost(postId: string): Promise<number> {
+    return await this.commentRepository.count({ where: { postId: postId } });
   }
 
   async getComment(id: string): Promise<Comment> {
@@ -56,10 +62,17 @@ export class CommentService {
 
   async createComment(body: CreateCommentDto): Promise<Comment> {
     try {
-      return await this.commentRepository.save({
+      const post = await this.postService.getPostById(body.postId);
+      if (!post) {
+        throw new NotFoundException('Post not found');
+      }
+      const comment = {
         id: uuid(),
         ...body,
-      });
+      };
+      const newCmt = await this.commentRepository.save(comment);
+      this.postService.updateQuanityComments(post.id, 'increment');
+      return newCmt;
     } catch (error) {
       throw new BadRequestException('Error creating comment');
     }
@@ -110,6 +123,10 @@ export class CommentService {
     idCmtParent?: string,
   ): Promise<{ status: number; message: string }> {
     try {
+      const post = await this.postService.getPostById(id);
+      if (!post) {
+        throw new NotFoundException('Post not found');
+      }
       const comment = await this.commentRepository.findOne({ where: { id } });
       if (idCmtParent) {
         const commentParent = await this.commentRepository.findOne({
@@ -127,6 +144,7 @@ export class CommentService {
         throw new NotFoundException('Comment not found');
       }
       await this.commentRepository.remove(comment);
+      this.postService.updateQuanityComments(comment.postId, 'decrement');
       return {
         status: HttpStatus.OK,
         message: 'Comment deleted successfully',
