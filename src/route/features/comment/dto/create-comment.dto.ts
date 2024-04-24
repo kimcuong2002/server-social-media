@@ -4,7 +4,7 @@ import { IsNotEmpty, IsOptional } from 'class-validator';
 @InputType()
 export class CreateCommentDto {
   @IsOptional()
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { defaultValue: '' })
   content: string;
 
   @IsNotEmpty()
