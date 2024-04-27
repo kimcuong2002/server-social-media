@@ -1,5 +1,6 @@
 import {
   Args,
+  Context,
   Mutation,
   Parent,
   Query,
@@ -13,6 +14,9 @@ import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/route/auth/guard/jwt-auth.guard';
 import { CommentDto } from './dto/comment.dto';
 import { CreateCommentDto } from './dto/create-comment.dto';
+import { getUserIdFromJwt } from 'src/helper/getIdUserFromJwt';
+import { ResponseDto } from 'src/ts/common';
+import { Comment } from './entities/comment.entity';
 
 @Resolver(() => CommentDto)
 export class CommentResolver {
@@ -39,17 +43,20 @@ export class CommentResolver {
 
   @UseGuards(JwtAuthGuard)
   @Mutation(() => CommentDto)
-  createComment(@Args('body') body: CreateCommentDto) {
-    return this.commentService.createComment(body);
+  createComment(@Context() context, @Args('body') body: CreateCommentDto) {
+    const userId = getUserIdFromJwt(context);
+    return this.commentService.createComment(userId, body);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Mutation(() => CommentDto)
+  @Mutation(() => ResponseDto)
   replyComment(
+    @Context() context,
     @Args('idCmtParent') idCmtParent: string,
     @Args('body') body: CreateCommentDto,
   ) {
-    return this.commentService.replyComment(idCmtParent, body);
+    const userId = getUserIdFromJwt(context);
+    return this.commentService.replyComment(userId, idCmtParent, body);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -68,17 +75,17 @@ export class CommentResolver {
   }
 
   @ResolveField()
-  author(@Parent() comment: CommentDto) {
+  async author(@Parent() comment: Comment) {
     return this.userService.getUserById(comment.author);
   }
 
   @ResolveField()
-  likes(@Parent() comment: CommentDto) {
+  async likes(@Parent() comment: Comment) {
     return this.userService.getManyUsersById(comment.likes);
   }
 
   @ResolveField()
-  replies(@Parent() comment: CommentDto) {
+  async replies(@Parent() comment: Comment) {
     return this.commentService.getManyCommentByIds(comment.replies);
   }
 }

@@ -11,10 +11,6 @@ export class CreateCommentDto {
   @Field(() => String)
   postId: string;
 
-  @IsNotEmpty()
-  @Field(() => String)
-  author: string;
-
   @IsOptional()
   @Field(() => [String], { defaultValue: [] })
   images: string[];

@@ -54,6 +54,7 @@ export class GroupService {
         ...body,
         author: idAuthor,
         admins: [idAuthor],
+        members: [idAuthor],
       });
     } catch (error) {
       throw new BadRequestException('Error creating group');
