@@ -71,6 +71,8 @@ export class CommentService {
         id: uuid(),
         ...body,
         author: author,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
       const newCmt = await this.commentRepository.save(comment);
       this.postService.updateQuanityComments(post.id, 'increment');
@@ -110,7 +112,7 @@ export class CommentService {
       if (!comment) {
         throw new NotFoundException('Comment not found');
       }
-      comment = { ...comment, ...body };
+      comment = { ...comment, ...body, updatedAt: new Date() };
       await this.commentRepository.save(comment);
       return {
         status: HttpStatus.OK,
