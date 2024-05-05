@@ -24,7 +24,7 @@ export class CollectionResolver {
   constructor(
     private readonly collectionService: CollectionService,
     private readonly postService: PostService,
-  ) { }
+  ) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(EnumRole.ADMIN)
@@ -43,7 +43,7 @@ export class CollectionResolver {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Mutation(() => ResponseDto)
+  @Mutation(() => CollectionDto)
   createCollection(@Args('body') body: CreateCollectionDto) {
     return this.collectionService.createCollection(body);
   }
@@ -88,7 +88,6 @@ export class CollectionResolver {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(EnumRole.ADMIN)
   @Mutation(() => ResponseDto)
   deleteCollection(@Args('id') id: string) {
     return this.collectionService.deleteCollection(id);

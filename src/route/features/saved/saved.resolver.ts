@@ -1,5 +1,6 @@
 import {
   Args,
+  Context,
   Mutation,
   Parent,
   Query,
@@ -15,19 +16,20 @@ import { SavedDto } from './dto/saved.dto';
 import { CreateSavedDto } from './dto/create-saved.dto';
 import { ResponseDto } from 'src/ts/common';
 import { Saved } from './entities/saved.entity';
+import { getUserIdFromJwt } from 'src/helper/getIdUserFromJwt';
 
 @Resolver(() => SavedDto)
 export class SavedResolver {
   constructor(
     private readonly savedService: SavedService,
     private readonly postService: PostService,
-    private readonly userService: UserService,
   ) {}
 
   @UseGuards(JwtAuthGuard)
   @Query(() => SavedDto)
-  getSaved(@Args('idAuthor') idAuthor: string) {
-    return this.savedService.getSaved(idAuthor);
+  getSaved(@Context() context) {
+    const userId = getUserIdFromJwt(context);
+    return this.savedService.getSaved(userId);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -75,10 +77,5 @@ export class SavedResolver {
   @ResolveField()
   async posts(@Parent() saved: Saved) {
     return this.postService.getManyPostsById(saved.posts);
-  }
-
-  @ResolveField()
-  async author(@Parent() saved: Saved) {
-    return this.userService.getUserById(saved.author);
   }
 }

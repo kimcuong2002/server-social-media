@@ -25,4 +25,7 @@ export class Collection {
 
   @Column()
   updatedAt: Date;
+
+  @Column()
+  avatar: string;
 }

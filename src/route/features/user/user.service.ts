@@ -12,6 +12,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { EnumActive, EnumRole } from 'src/ts/enum';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Pagination } from 'src/ts/common';
+import { SavedService } from '../saved/saved.service';
 
 @Injectable()
 export class UserService {
@@ -90,10 +91,12 @@ export class UserService {
         }
       });
 
-      return this.userRepository.save({
+      const user = await this.userRepository.save({
         id: uuid(),
         ...body,
       });
+
+      return user;
     } catch (error) {
       throw new BadRequestException(`Error creating user`);
     }

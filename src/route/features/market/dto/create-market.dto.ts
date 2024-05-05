@@ -1,27 +1,32 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsNotEmpty, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsUUID } from 'class-validator';
 
 @InputType()
-export class CreateCollectionDto {
-  @IsNotEmpty()
-  @Field()
-  saved: string;
-
+export class CreateMarketDto {
   @IsNotEmpty()
   @Field()
   name: string;
 
   @IsNotEmpty()
   @Field()
-  avatar: string;
+  description: string;
+
+  @IsNotEmpty()
+  @IsUUID()
+  @Field()
+  userId: string;
+
+  @IsNotEmpty()
+  @Field(() => [String], { defaultValue: [] })
+  image: string[];
+
+  @IsNotEmpty()
+  @Field()
+  price: number;
 
   @IsOptional()
-  @Field(() => [String], { defaultValue: [] })
-  posts: string[];
-
-  @IsOptional()
-  @Field(() => [String], { defaultValue: [] })
-  markets: string[];
+  @Field({ nullable: true })
+  location?: string;
 
   @IsOptional()
   @Field(() => Date, { defaultValue: new Date() })

@@ -9,13 +9,11 @@ import { v4 as uuid } from 'uuid';
 import { Saved } from './entities/saved.entity';
 import { Repository } from 'typeorm';
 import { CreateSavedDto } from './dto/create-saved.dto';
-import { PostService } from '../post/post.service';
 
 @Injectable()
 export class SavedService {
   constructor(
     @InjectRepository(Saved) private savedRepository: Repository<Saved>,
-    private readonly postService: PostService,
   ) {}
 
   async getSaved(idAuthor: string): Promise<Saved> {

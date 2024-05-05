@@ -6,4 +6,8 @@ export class UpdateCollectionDto {
   @IsNotEmpty()
   @Field(() => String)
   name: string;
+
+  @IsNotEmpty()
+  @Field(() => String)
+  avatar: string;
 }

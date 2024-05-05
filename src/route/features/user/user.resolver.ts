@@ -42,6 +42,12 @@ export class UserResolver {
     return this.userService.getUserById(userId);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Query(() => ResponseUserDto)
+  getUserById(@Args('id') id: string) {
+    return this.userService.getUserById(id);
+  }
+
   @Query(() => ResponseDto, { name: 'user' })
   getUserByName(@Args('username') username: string) {
     return this.userService.getUserByName(username);

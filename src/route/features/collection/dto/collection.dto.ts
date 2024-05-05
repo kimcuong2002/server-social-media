@@ -23,4 +23,7 @@ export class CollectionDto {
 
   @Field()
   updatedAt: Date;
+
+  @Field()
+  avatar: string;
 }
