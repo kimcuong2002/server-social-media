@@ -24,8 +24,8 @@ export class MarketDto {
   @Field(() => String)
   price: string;
 
-  @Field(() => String)
-  category: string;
+  @Field(() => Number)
+  category: number;
 
   @Field(() => String)
   location: string;

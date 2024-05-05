@@ -7,3 +7,4 @@ export * from './collection/entities/collection.entity';
 export * from './message/entities/message.entity';
 export * from './room/entities/room.entity';
 export * from './comment/entities/comment.entity';
+export * from './market/entities/market.entity';

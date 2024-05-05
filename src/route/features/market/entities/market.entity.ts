@@ -27,7 +27,7 @@ export class Market {
   price: string;
 
   @Column()
-  category: string;
+  category: number;
 
   @Column()
   location: string;
