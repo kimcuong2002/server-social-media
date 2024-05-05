@@ -262,4 +262,107 @@ export class UserService {
       throw new BadRequestException('Error unblock user');
     }
   }
+
+  async sendReqFriend(
+    author: string,
+    idFriend: string,
+  ): Promise<{ status: number; message: string }> {
+    try {
+      const userWantAddFriend = await this.userRepository.findOne({
+        where: { id: idFriend },
+      });
+      if (!userWantAddFriend) {
+        throw new NotFoundException('User want add friend not found');
+      }
+      userWantAddFriend.friendsReq = [author, ...userWantAddFriend.friendsReq];
+      await this.userRepository.save(userWantAddFriend);
+      return {
+        status: HttpStatus.OK,
+        message: 'Send request friend successfully',
+      };
+    } catch (error) {
+      throw new BadRequestException('Error send request friend');
+    }
+  }
+
+  async acceptReqFriend(
+    author: string,
+    idFriend: string,
+  ): Promise<{ status: number; message: string }> {
+    try {
+      const user = await this.userRepository.findOne({ where: { id: author } });
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+      const userWantAddFriend = await this.userRepository.findOne({
+        where: { id: idFriend },
+      });
+      if (!userWantAddFriend) {
+        throw new NotFoundException('User want add friend not found');
+      }
+      userWantAddFriend.friends = [author, ...userWantAddFriend.friends];
+      user.friends = [idFriend, ...user.friends];
+      user.friendsReq = user.friendsReq.filter((id) => id !== idFriend);
+      await this.userRepository.save(userWantAddFriend);
+      await this.userRepository.save(user);
+      return {
+        status: HttpStatus.OK,
+        message: 'Accept request friend successfully',
+      };
+    } catch (error) {
+      throw new BadRequestException('Error accept request friend');
+    }
+  }
+
+  async rejectReqFriend(
+    author: string,
+    idFriend: string,
+  ): Promise<{ status: number; message: string }> {
+    try {
+      const user = await this.userRepository.findOne({ where: { id: author } });
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+      const userWantAddFriend = await this.userRepository.findOne({
+        where: { id: idFriend },
+      });
+      if (!userWantAddFriend) {
+        throw new NotFoundException('User want add friend not found');
+      }
+      user.friendsReq = user.friendsReq.filter((id) => id !== idFriend);
+      await this.userRepository.save(user);
+      return {
+        status: HttpStatus.OK,
+        message: 'Reject request friend successfully',
+      };
+    } catch (error) {
+      throw new BadRequestException('Error reject request friend');
+    }
+  }
+
+  async deleteFriend(
+    author: string,
+    idFriend: string,
+  ): Promise<{ status: number; message: string }> {
+    try {
+      const user = await this.userRepository.findOne({ where: { id: author } });
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+      const userWantUnfriend = await this.userRepository.findOne({
+        where: { id: idFriend },
+      });
+      if (!userWantUnfriend) {
+        throw new NotFoundException('User want unfriend not found');
+      }
+      user.friends = user.friends.filter((id) => id !== idFriend);
+      await this.userRepository.save(user);
+      return {
+        status: HttpStatus.OK,
+        message: 'Delete friend successfully',
+      };
+    } catch (error) {
+      throw new BadRequestException('Error delete friend');
+    }
+  }
 }
