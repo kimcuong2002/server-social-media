@@ -12,7 +12,7 @@ import { MarketService } from './market.service';
 import { UserService } from '../user/user.service';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/route/auth/guard/jwt-auth.guard';
-import { ParamsQueryDto } from '../group/dto/common.dto';
+import { ParamsQueryDto } from 'src/ts/common';
 import { PaginationMarketDto } from './dto/common.dto';
 import { getUserIdFromJwt } from 'src/helper/getIdUserFromJwt';
 import { CreateMarketDto } from './dto/create-market.dto';
