@@ -9,6 +9,7 @@ import { MessageModule } from './message/message.module';
 import { RoomModule } from './room/room.module';
 import { CommentModule } from './comment/comment.module';
 import { MarketModule } from './market/market.module';
+import { FriendModule } from './friend/friend.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { MarketModule } from './market/market.module';
     RoomModule,
     CommentModule,
     MarketModule,
+    FriendModule,
   ],
 })
 export class FeatureModule {}

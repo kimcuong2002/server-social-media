@@ -76,14 +76,6 @@ export class UpdateUserDto {
   description: string;
 
   @IsOptional()
-  @Field(() => [String], { nullable: true })
-  friends: string[];
-
-  @IsOptional()
-  @Field(() => [String], { nullable: true })
-  friendsReq: string[];
-
-  @IsOptional()
   @Field(() => Date, { defaultValue: new Date() })
   updatedAt: Date;
 }

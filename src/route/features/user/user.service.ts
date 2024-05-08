@@ -7,17 +7,16 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { v4 as uuid } from 'uuid';
 import { User } from './entities/user.entity';
-import { MongoRepository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { EnumActive, EnumRole } from 'src/ts/enum';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Pagination } from 'src/ts/common';
-import { SavedService } from '../saved/saved.service';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User) private userRepository: MongoRepository<User>,
+    @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
   async getUsers(page: number, limit: number): Promise<Pagination<User>> {
@@ -29,11 +28,15 @@ export class UserService {
   }
 
   async getUserById(id: string): Promise<User> {
-    return this.userRepository.findOne({
+    const user = await this.userRepository.findOne({
       where: {
         id,
       },
     });
+    if (!user) {
+      throw new Error(`User with ID ${id} not found`);
+    }
+    return user;
   }
 
   async getUserByName(username: string): Promise<User> {
@@ -65,13 +68,7 @@ export class UserService {
   }
 
   async getManyUsersById(userIds: string[]): Promise<User[]> {
-    return this.userRepository.find({
-      where: {
-        id: {
-          $in: userIds,
-        } as any,
-      },
-    });
+    return this.userRepository.findByIds(userIds);
   }
 
   async createUser(body: CreateUserDto): Promise<User> {
@@ -260,109 +257,6 @@ export class UserService {
       };
     } catch (error) {
       throw new BadRequestException('Error unblock user');
-    }
-  }
-
-  async sendReqFriend(
-    author: string,
-    idFriend: string,
-  ): Promise<{ status: number; message: string }> {
-    try {
-      const userWantAddFriend = await this.userRepository.findOne({
-        where: { id: idFriend },
-      });
-      if (!userWantAddFriend) {
-        throw new NotFoundException('User want add friend not found');
-      }
-      userWantAddFriend.friendsReq = [author, ...userWantAddFriend.friendsReq];
-      await this.userRepository.save(userWantAddFriend);
-      return {
-        status: HttpStatus.OK,
-        message: 'Send request friend successfully',
-      };
-    } catch (error) {
-      throw new BadRequestException('Error send request friend');
-    }
-  }
-
-  async acceptReqFriend(
-    author: string,
-    idFriend: string,
-  ): Promise<{ status: number; message: string }> {
-    try {
-      const user = await this.userRepository.findOne({ where: { id: author } });
-      if (!user) {
-        throw new NotFoundException('User not found');
-      }
-      const userWantAddFriend = await this.userRepository.findOne({
-        where: { id: idFriend },
-      });
-      if (!userWantAddFriend) {
-        throw new NotFoundException('User want add friend not found');
-      }
-      userWantAddFriend.friends = [author, ...userWantAddFriend.friends];
-      user.friends = [idFriend, ...user.friends];
-      user.friendsReq = user.friendsReq.filter((id) => id !== idFriend);
-      await this.userRepository.save(userWantAddFriend);
-      await this.userRepository.save(user);
-      return {
-        status: HttpStatus.OK,
-        message: 'Accept request friend successfully',
-      };
-    } catch (error) {
-      throw new BadRequestException('Error accept request friend');
-    }
-  }
-
-  async rejectReqFriend(
-    author: string,
-    idFriend: string,
-  ): Promise<{ status: number; message: string }> {
-    try {
-      const user = await this.userRepository.findOne({ where: { id: author } });
-      if (!user) {
-        throw new NotFoundException('User not found');
-      }
-      const userWantAddFriend = await this.userRepository.findOne({
-        where: { id: idFriend },
-      });
-      if (!userWantAddFriend) {
-        throw new NotFoundException('User want add friend not found');
-      }
-      user.friendsReq = user.friendsReq.filter((id) => id !== idFriend);
-      await this.userRepository.save(user);
-      return {
-        status: HttpStatus.OK,
-        message: 'Reject request friend successfully',
-      };
-    } catch (error) {
-      throw new BadRequestException('Error reject request friend');
-    }
-  }
-
-  async deleteFriend(
-    author: string,
-    idFriend: string,
-  ): Promise<{ status: number; message: string }> {
-    try {
-      const user = await this.userRepository.findOne({ where: { id: author } });
-      if (!user) {
-        throw new NotFoundException('User not found');
-      }
-      const userWantUnfriend = await this.userRepository.findOne({
-        where: { id: idFriend },
-      });
-      if (!userWantUnfriend) {
-        throw new NotFoundException('User want unfriend not found');
-      }
-      user.friends = user.friends.filter((id) => id !== idFriend);
-      await this.userRepository.save(user);
-      return {
-        status: HttpStatus.OK,
-        message: 'Delete friend successfully',
-      };
-    } catch (error) {
-      throw new BadRequestException('Error delete friend');
     }
   }
 }

@@ -119,44 +119,6 @@ export class UserResolver {
     return this.userService.unBlockUser(idUser, idUserBlocked);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Mutation(() => ResponseDto)
-  sendReqFriend(@Context() context, @Args('idFriend') idFriend: string) {
-    const idUser = getUserIdFromJwt(context);
-    return this.userService.sendReqFriend(idUser, idFriend);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Mutation(() => ResponseDto)
-  rejectReqFriend(@Context() context, @Args('idFriend') idFriend: string) {
-    const idUser = getUserIdFromJwt(context);
-    return this.userService.rejectReqFriend(idUser, idFriend);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Mutation(() => ResponseDto)
-  acceptReqFriend(@Context() context, @Args('idFriend') idFriend: string) {
-    const idUser = getUserIdFromJwt(context);
-    return this.userService.acceptReqFriend(idUser, idFriend);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Mutation(() => ResponseDto)
-  deleteFriend(@Context() context, @Args('idFriend') idFriend: string) {
-    const idUser = getUserIdFromJwt(context);
-    return this.userService.deleteFriend(idUser, idFriend);
-  }
-
-  @ResolveField()
-  async friends(@Parent() user: User) {
-    return this.userService.getManyUsersById(user.friends);
-  }
-
-  @ResolveField()
-  async friendsReq(@Parent() user: User) {
-    return this.userService.getManyUsersById(user.friends);
-  }
-
   @ResolveField()
   async usersBlocked(@Parent() user: User) {
     return this.userService.getManyUsersById(user.usersBlocked);

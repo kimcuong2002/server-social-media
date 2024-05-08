@@ -64,12 +64,6 @@ export class User {
   description: string;
 
   @Column()
-  friends: string[];
-
-  @Column()
-  friendsReq: string[];
-
-  @Column()
   createdAt: Date;
 
   @Column()

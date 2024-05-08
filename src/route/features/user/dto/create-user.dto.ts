@@ -86,14 +86,6 @@ export class CreateUserDto {
   description: string;
 
   @IsOptional()
-  @Field(() => [String], { defaultValue: [] })
-  friends: string[];
-
-  @IsOptional()
-  @Field(() => [String], { defaultValue: [] })
-  friendsReq: string[];
-
-  @IsOptional()
   @Field(() => Date, { defaultValue: new Date() })
   createdAt: Date;
 

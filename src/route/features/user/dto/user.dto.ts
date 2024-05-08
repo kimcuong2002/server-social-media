@@ -60,12 +60,6 @@ export class UserDto {
   @Field()
   description: string;
 
-  @Field(() => [UserDto])
-  friends: string[];
-
-  @Field(() => [UserDto])
-  friendsReq: string[];
-
   @Field()
   createdAt: Date;
 
