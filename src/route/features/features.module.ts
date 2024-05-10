@@ -10,6 +10,7 @@ import { RoomModule } from './room/room.module';
 import { CommentModule } from './comment/comment.module';
 import { MarketModule } from './market/market.module';
 import { FriendModule } from './friend/friend.module';
+import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { FriendModule } from './friend/friend.module';
     CommentModule,
     MarketModule,
     FriendModule,
+    CategoryModule,
   ],
 })
 export class FeatureModule {}

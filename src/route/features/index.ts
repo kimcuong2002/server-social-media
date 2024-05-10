@@ -9,3 +9,4 @@ export * from './room/entities/room.entity';
 export * from './comment/entities/comment.entity';
 export * from './market/entities/market.entity';
 export * from './friend/entities/friend.entity';
+export * from './category/entities/category.entity';
