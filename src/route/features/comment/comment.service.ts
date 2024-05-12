@@ -7,7 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { v4 as uuid } from 'uuid';
 import { Pagination } from 'src/ts/common';
-import { MongoRepository, Repository } from 'typeorm';
+import { MongoRepository } from 'typeorm';
 import { Comment } from './entities/comment.entity';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { PostService } from '../post/post.service';
@@ -23,7 +23,7 @@ export class CommentService {
   async getComments(
     postId: string,
     page = 1,
-    limit = 10,
+    limit = 1000,
   ): Promise<Pagination<Comment>> {
     const skip = (page - 1) * limit;
     const [result, count] = await this.commentRepository.findAndCount({
@@ -32,7 +32,16 @@ export class CommentService {
       take: limit,
     });
 
-    return new Pagination<Comment>(result, count, page);
+    const cmts: Comment[] = [];
+    result.forEach((item: Comment) => {
+      if (
+        !result.some((otherComment) => otherComment.replies.includes(item.id))
+      ) {
+        cmts.push(item);
+      }
+    });
+
+    return new Pagination<Comment>(cmts, count, page);
   }
 
   async getQuantityCommentOfPost(postId: string): Promise<number> {
