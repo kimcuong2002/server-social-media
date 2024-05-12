@@ -11,8 +11,8 @@ export class FriendService {
     @InjectRepository(Friend) private friendRepository: Repository<Friend>,
   ) {}
 
-  async getFriends(id: string): Promise<Friend[]> {
-    return this.friendRepository.find({
+  async getFriends(id: string): Promise<Friend> {
+    return this.friendRepository.findOne({
       where: {
         author: id,
       },
