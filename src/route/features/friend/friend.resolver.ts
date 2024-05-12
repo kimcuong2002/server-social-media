@@ -14,6 +14,7 @@ import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/route/auth/guard/jwt-auth.guard';
 import { ResponseDto } from 'src/ts/common';
 import { getUserIdFromJwt } from 'src/helper/getIdUserFromJwt';
+import { CreateFriendDto } from './dto/create-friend.dto';
 
 @Resolver(() => FriendDto)
 export class FriendResolver {
@@ -34,6 +35,15 @@ export class FriendResolver {
   getFriends(@Context() context) {
     const userId = getUserIdFromJwt(context);
     return this.friendService.getFriends(userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Mutation(() => FriendDto)
+  createFriend(
+    @Args('idUser') idUser: string,
+    @Args('body') body: CreateFriendDto,
+  ) {
+    return this.friendService.createFriend(idUser, body);
   }
 
   @UseGuards(JwtAuthGuard)
