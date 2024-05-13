@@ -13,7 +13,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { EnumActive, EnumRole } from 'src/ts/enum';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Pagination } from 'src/ts/common';
-import { error } from 'console';
 
 @Injectable()
 export class UserService {
@@ -70,6 +69,7 @@ export class UserService {
   }
 
   async getManyUsersById(userIds: string[]): Promise<User[]> {
+    if (userIds.length === 0) return [];
     return this.userRepository.findByIds(userIds);
   }
 
