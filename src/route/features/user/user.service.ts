@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  HttpException,
   HttpStatus,
   Injectable,
   NotFoundException,
@@ -12,6 +13,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { EnumActive, EnumRole } from 'src/ts/enum';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Pagination } from 'src/ts/common';
+import { error } from 'console';
 
 @Injectable()
 export class UserService {
@@ -73,20 +75,24 @@ export class UserService {
 
   async createUser(body: CreateUserDto): Promise<User> {
     try {
-      const conditions = [
-        { username: body.username },
-        { email: body.email },
-        { phone: body.phone },
-      ];
+      // const conditions = [
+      //   { username: body.username },
+      //   { email: body.email },
+      //   { phone: body.phone },
+      // ];
 
-      conditions.forEach(async (c) => {
-        const user = await this.userRepository.findOne({ where: c });
-        if (user) {
-          throw new Error(
-            'User with the same username, email or phone number already exists',
-          );
-        }
-      });
+      // conditions.forEach(async (c) => {
+      //   const user = await this.userRepository.findOne({ where: c });
+      //   if (user) {
+      //     throw new HttpException(
+      //       {
+      //         status: HttpStatus.BAD_REQUEST,
+      //         error: `User with the same ${Object.keys(c)[0]} already exists`,
+      //       },
+      //       HttpStatus.BAD_REQUEST,
+      //     );
+      //   }
+      // });
 
       const user = await this.userRepository.save({
         id: uuid(),

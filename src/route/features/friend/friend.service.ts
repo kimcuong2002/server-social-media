@@ -40,20 +40,18 @@ export class FriendService {
     try {
       const friend = await this.friendRepository.findOne({
         where: {
-          id: friendId,
+          author: friendId,
         },
       });
-      if (friend) {
-        friend.friendsReq = [author, ...friend.friendsReq];
-        await this.friendRepository.save({
-          ...friend,
-          updatedAt: new Date(),
-        });
-        return {
-          status: HttpStatus.OK,
-          message: 'Friend request sent successfully',
-        };
-      }
+      friend.friendsReq = [author, ...friend.friendsReq];
+      await this.friendRepository.save({
+        ...friend,
+        updatedAt: new Date(),
+      });
+      return {
+        status: HttpStatus.OK,
+        message: 'Friend request sent successfully',
+      };
     } catch (error) {
       throw new BadRequestException('Error adding friend');
     }
@@ -66,13 +64,13 @@ export class FriendService {
     try {
       const friendOfAuthor = await this.friendRepository.findOne({
         where: {
-          id: author,
+          author: author,
         },
       });
 
       const friendOfFriendOfAuthor = await this.friendRepository.findOne({
         where: {
-          id: friendId,
+          author: friendId,
         },
       });
 
@@ -117,7 +115,7 @@ export class FriendService {
     try {
       const friendOfAuthor = await this.friendRepository.findOne({
         where: {
-          id: author,
+          author: author,
         },
       });
       if (friendOfAuthor) {
@@ -145,13 +143,13 @@ export class FriendService {
     try {
       const friendOfAuthor = await this.friendRepository.findOne({
         where: {
-          id: author,
+          author: author,
         },
       });
 
       const friendOfFriendOfAuthor = await this.friendRepository.findOne({
         where: {
-          id: friendId,
+          author: friendId,
         },
       });
 

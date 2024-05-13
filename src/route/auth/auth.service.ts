@@ -7,9 +7,10 @@ import {
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { UserService } from '../features/user/user.service';
-import { LoginUserDto, SignUpUserDto } from './dto/auth-mutation.dto';
+import { LoginUserDto } from './dto/auth-mutation.dto';
 import { LoginResponseDto } from './dto/login-response';
 import { User } from 'src/route/features/user/entities/user.entity';
+import { CreateUserDto } from '../features/user/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -63,7 +64,7 @@ export class AuthService {
     };
   }
 
-  async signup(body: SignUpUserDto): Promise<User> {
+  async signup(body: CreateUserDto): Promise<User> {
     const password = await bcrypt.hash(body.password, 10);
     return this.userService.createUser({ ...body, password });
   }
