@@ -70,7 +70,11 @@ export class UserService {
 
   async getManyUsersById(userIds: string[]): Promise<User[]> {
     if (userIds.length === 0) return [];
-    return this.userRepository.findByIds(userIds);
+    return this.userRepository.find({
+      where: {
+        id: { $in: userIds } as any,
+      },
+    });
   }
 
   async createUser(body: CreateUserDto): Promise<User> {
