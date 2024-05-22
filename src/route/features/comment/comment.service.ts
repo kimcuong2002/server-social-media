@@ -134,10 +134,11 @@ export class CommentService {
 
   async deleteComment(
     id: string,
-    idCmtParent?: string,
+    idCmtParent: string,
+    idPost: string,
   ): Promise<{ status: number; message: string }> {
     try {
-      const post = await this.postService.getPostById(id);
+      const post = await this.postService.getPostById(idPost);
       if (!post) {
         throw new NotFoundException('Post not found');
       }
