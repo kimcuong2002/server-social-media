@@ -66,12 +66,13 @@ export class CommentResolver {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Mutation(() => CommentDto)
+  @Mutation(() => ResponseDto)
   deleteComment(
     @Args('id') id: string,
     @Args('idCmtParent') idCmtParent: string | undefined,
+    @Args('idPost') idPost: string,
   ) {
-    return this.commentService.deleteComment(id, idCmtParent);
+    return this.commentService.deleteComment(id, idCmtParent, idPost);
   }
 
   @ResolveField()
