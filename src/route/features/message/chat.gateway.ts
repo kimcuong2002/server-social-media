@@ -9,9 +9,9 @@ import {
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { MessageService } from './message.service';
-import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
 import { AuthService } from 'src/route/auth/auth.service';
+import { UserService } from '../user/user.service';
 
 @WebSocketGateway({ cors: true })
 export class ChatGateway
@@ -21,15 +21,24 @@ export class ChatGateway
   constructor(
     private readonly messageService: MessageService,
     private readonly authService: AuthService,
+    private readonly userService: UserService,
   ) {}
 
   @SubscribeMessage('sendMessage')
-  async handleSendMessage(
-    client: Socket,
-    payload: CreateMessageDto,
-  ): Promise<void> {
-    await this.messageService.createMessage(payload);
-    this.server.sockets.emit('recMessage', payload);
+  async handleSendMessage(client: Socket, payload: string): Promise<void> {
+    const authHeader = client.handshake.headers.authorization;
+    if (authHeader) {
+      const author = await this.authService.handleVerifyToken(
+        (authHeader as string).split(' ')[1],
+      );
+      const infoUser = await this.userService.getUserById(author);
+      this.server.sockets.emit('recMessage', {
+        idUser: infoUser.id,
+        fullname: infoUser.fullname,
+        avatar: infoUser.avatar,
+        message: payload,
+      });
+    }
   }
 
   @SubscribeMessage('editMessage')
@@ -56,7 +65,6 @@ export class ChatGateway
   async handleConnection(socket: Socket) {
     console.log('connect', socket.id);
     const authHeader = socket.handshake.headers.authorization;
-    console.log('🚀 ~ handleConnection ~ authHeader:', authHeader);
 
     if (authHeader && (authHeader as string).split(' ')[1]) {
       try {
