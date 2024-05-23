@@ -36,11 +36,25 @@ export class RoomService {
 
   async createRoom(body: CreateRoomDto, author: string): Promise<Room> {
     try {
-      return this.roomRepository.save({
-        id: uuid(),
-        ...body,
-        author: author,
+      let idRoom = '';
+      for (const mem of body.members) {
+        idRoom = idRoom + mem;
+      }
+      const id = author + '-' + idRoom;
+      const room = await this.roomRepository.findOne({
+        where: {
+          id: id,
+        },
       });
+      if (room) {
+        return room;
+      } else {
+        return this.roomRepository.save({
+          id: id,
+          ...body,
+          author: author,
+        });
+      }
     } catch (err) {
       throw new BadRequestException('Creating room error');
     }
