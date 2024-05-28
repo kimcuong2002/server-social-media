@@ -25,18 +25,27 @@ export class ChatGateway
   ) {}
 
   @SubscribeMessage('sendMessage')
-  async handleSendMessage(client: Socket, payload: string): Promise<void> {
-    const authHeader = client.handshake.headers.authorization;
+  async handleSendMessage(
+    client: Socket,
+    payload: {
+      content: string;
+      type: string;
+    },
+  ): Promise<void> {
+    const authHeader = client.handshake.auth.authorization;
     if (authHeader) {
-      const author = await this.authService.handleVerifyToken(
+      const auth = await this.authService.handleVerifyToken(
         (authHeader as string).split(' ')[1],
       );
-      const infoUser = await this.userService.getUserById(author);
+      const infoUser = await this.userService.getUserById(auth);
       this.server.sockets.emit('recMessage', {
-        idUser: infoUser.id,
-        fullname: infoUser.fullname,
-        avatar: infoUser.avatar,
-        message: payload,
+        author: {
+          id: infoUser.id,
+          fullname: infoUser.fullname,
+          avatar: infoUser.avatar,
+        },
+        content: payload.content,
+        type: payload.type,
       });
     }
   }
@@ -63,9 +72,7 @@ export class ChatGateway
   afterInit(socket: Socket): any {}
 
   async handleConnection(socket: Socket) {
-    console.log('connect', socket.id);
-    const authHeader = socket.handshake.headers.authorization;
-
+    const authHeader = socket.handshake.auth.authorization;
     if (authHeader && (authHeader as string).split(' ')[1]) {
       try {
         socket.data.userId = await this.authService.handleVerifyToken(
