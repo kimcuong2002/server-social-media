@@ -37,7 +37,6 @@ export class FriendResolver {
     return this.friendService.getFriends(userId);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Mutation(() => FriendDto)
   createFriend(
     @Args('idUser') idUser: string,
