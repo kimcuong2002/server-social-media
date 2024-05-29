@@ -34,7 +34,7 @@ export class AuthService {
   async handleVerifyToken(token: string) {
     try {
       const payload = this.jwtService.verify(token); // this.configService.get('SECRETKEY')
-      return payload['userId'];
+      return payload['sub'];
     } catch (e) {
       throw new HttpException(
         {
