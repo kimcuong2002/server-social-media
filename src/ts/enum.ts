@@ -4,7 +4,7 @@ export enum EnumRole {
 }
 
 export enum EnumTypeMessage {
-  STRING = 'string',
+  STRING = 'text',
   IMAGE = 'image',
   VIDEO = 'video',
 }
